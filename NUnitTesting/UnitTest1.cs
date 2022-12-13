@@ -1,6 +1,8 @@
 ﻿using NUnit.Framework;
+using System;
 using System.Net;
 using System.Security.Policy;
+using System.Threading;
 using UserForm1;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
@@ -18,12 +20,12 @@ namespace NUnitTesting
         [SetUp]
         public void Setup()
         {
-            string tendangnhap = "1";
+            string tendangnhap = "ST003";
 
             FNhanVien = new UserForm1.Forms.FormNhanVien();
             FKhachHang = new UserForm1.Forms.FormKhachHang();
             FKhoHang = new UserForm1.Forms.FormKhoHang();
-            //FBanHang = new UserForm1.Forms.FormBanHang(tendangnhap);
+            FBanHang = new UserForm1.Forms.FormBanHang(tendangnhap);
         }
 
         //[Test]
@@ -33,9 +35,10 @@ namespace NUnitTesting
         //}
 
 
-         //đúng định dạng, không trùng tồn tại
+        //đúng định dạng, không trùng tồn tại
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_AddEmployee_01()
         {
             string username = "ST005";
@@ -52,6 +55,7 @@ namespace NUnitTesting
 
         //trùng tên đăng nhập
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_AddEmployee_02()
         {
             string username = "ST002";
@@ -69,6 +73,7 @@ namespace NUnitTesting
 
         //sai tất cả định dạng
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_AddEmployee_03()
         {
             string username = "5j";
@@ -85,6 +90,7 @@ namespace NUnitTesting
 
         //Để trống
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_AddEmployee_04()
         {
             string username = "";
@@ -99,15 +105,18 @@ namespace NUnitTesting
             Assert.False(FNhanVien.CheckData(username, password, fullname, email, money, phone, cmnd, address));
         }
 
+
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_UpdateEmployee_01()
         {
-            string username = "ST003";
+            string username = "ST004";
 
             Assert.False(FNhanVien.CheckUpdateData("some legit information", username, -1));
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_UpdateEmployee_02()
         {
             string username = "ST003";
@@ -118,6 +127,7 @@ namespace NUnitTesting
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_UpdateEmployee_03()
         {
             string username = "ST003";
@@ -127,6 +137,7 @@ namespace NUnitTesting
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_UpdateEmployee_04()
         {
             string username = "ST003";
@@ -136,6 +147,7 @@ namespace NUnitTesting
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_UpdateEmployee_05()
         {
             string username = "ST003";
@@ -145,6 +157,7 @@ namespace NUnitTesting
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_UpdateEmployee_06()
         {
             string username = "ST003";
@@ -155,6 +168,7 @@ namespace NUnitTesting
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_UpdateEmployee_07()
         {
             string username = "ST003";
@@ -165,6 +179,7 @@ namespace NUnitTesting
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_UpdateEmployee_08()
         {
             string username = "ST003";
@@ -174,6 +189,7 @@ namespace NUnitTesting
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_UpdateEmployee_09()
         {
             string username = "ST003";
@@ -183,6 +199,7 @@ namespace NUnitTesting
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_UpdateEmployee_10()
         {
             string username = "ST003";
@@ -192,6 +209,7 @@ namespace NUnitTesting
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_UpdateEmployee_11()
         {
             string username = "ST003";
@@ -203,6 +221,7 @@ namespace NUnitTesting
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_UpdateEmployee_12()
         {
             string username = "ST003";
@@ -214,6 +233,7 @@ namespace NUnitTesting
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_UpdateEmployee_13()
         {
             string username = "ST003";
@@ -224,6 +244,7 @@ namespace NUnitTesting
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_UpdateEmployee_14()
         {
             string username = "ST003";
@@ -234,6 +255,7 @@ namespace NUnitTesting
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_UpdateEmployee_15()
         {
 
@@ -244,7 +266,8 @@ namespace NUnitTesting
         }
 
         [Test]
-        public void UTCID_DeleteEmployee_1()
+        [Apartment(ApartmentState.STA)]
+        public void UTCID_DeleteEmployee_01()
         {
             string username = "ST003";
 
@@ -252,8 +275,19 @@ namespace NUnitTesting
 
         }
 
+        [Test]
+        [Apartment(ApartmentState.STA)]
+        public void UTCID_DeleteEmployee_02()
+        {
+            string username = "ST004";
+
+            Assert.False(FNhanVien.CheckDeleteData(username));
+
+        }
+
         //đúng định dạng, không trùng tồn tại
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_AddCustomer_01()
         {
             string id = "KH50";
@@ -267,6 +301,7 @@ namespace NUnitTesting
 
         //trùng ID đã tồn tại
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_AddCustomer_02()
         {
             string id = "KH01";
@@ -281,6 +316,7 @@ namespace NUnitTesting
 
         //sai tất cả định dạng
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_AddCustomer_03()
         {
             string id = "5t";
@@ -294,6 +330,7 @@ namespace NUnitTesting
 
         //Để trống
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_AddCustomer_04()
         {
             string id = "";
@@ -305,9 +342,153 @@ namespace NUnitTesting
             Assert.False(FKhachHang.CheckData(id, hoten, diachi, sdt, cmnd));
         }
 
+        [Test]
+        [Apartment(ApartmentState.STA)]
+        public void UTCID_UpdateCustomer_01()
+        {
+            string id = "KH03";
+            string hoten = "Nguyen Khanh R";
+            string diachi = "45/8A Pham Van Dong";
+            string sdt = "0986647512";
+            string cmnd = "025614992257";
+
+            Assert.False(FKhachHang.CheckUpdate(hoten, id, 0));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+        public void UTCID_UpdateCustomer_02()
+        {
+            string id = "KH02";
+            string hoten = "Nguyen Khanh R";
+            string diachi = "45/8A Pham Van Dong";
+            string sdt = "0986647512";
+            string cmnd = "025614992257";
+
+            Assert.True(FKhachHang.CheckUpdate(hoten,id,0));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+        public void UTCID_UpdateCustomer_03()
+        {
+            string id = "KH02";
+            string hoten = "Nguyen Khanh R";
+            string diachi = "45/8A Pham Van Dong";
+            string sdt = "0986647512";
+            string cmnd = "025614992257";
+
+            Assert.True(FKhachHang.CheckUpdate(sdt, id, 1));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+        public void UTCID_UpdateCustomer_04()
+        {
+            string id = "KH02";
+            string hoten = "Nguyen Khanh R";
+            string diachi = "45/8A Pham Van Dong";
+            string sdt = "0986647512";
+            string cmnd = "025614992257";
+
+            Assert.True(FKhachHang.CheckUpdate(diachi, id, 2));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+        public void UTCID_UpdateCustomer_05()
+        {
+            string id = "KH02";
+            string hoten = "Nguyen Khanh R";
+            string diachi = "45/8A Pham Van Dong";
+            string sdt = "0986647512";
+            string cmnd = "025614992257";
+
+            Assert.True(FKhachHang.CheckUpdate(cmnd, id, 3));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+        public void UTCID_UpdateCustomer_06()
+        {
+            string id = "KH02";
+            string hoten = "";
+            string diachi = "45/8A Pham Van Dong";
+            string sdt = "0986647512";
+            string cmnd = "025614992257";
+
+            Assert.False(FKhachHang.CheckUpdate(hoten, id, 0));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+        public void UTCID_UpdateCustomer_07()
+        {
+            string id = "KH02";
+            string hoten = "Nguyen Khanh R";
+            string diachi = "45/8A Pham Van Dong";
+            string sdt = "";
+            string cmnd = "025614992257";
+
+            Assert.False(FKhachHang.CheckUpdate(sdt, id, 1));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+        public void UTCID_UpdateCustomer_08()
+        {
+            string id = "KH02";
+            string hoten = "Nguyen Khanh R";
+            string diachi = "";
+            string sdt = "0986647512";
+            string cmnd = "025614992257";
+
+            Assert.False(FKhachHang.CheckUpdate(diachi, id, 2));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+        public void UTCID_UpdateCustomer_09()
+        {
+            string id = "KH02";
+            string hoten = "Nguyen Khanh R";
+            string diachi = "45/8A Pham Van Dong";
+            string sdt = "0986647512";
+            string cmnd = "";
+
+            Assert.False(FKhachHang.CheckUpdate(cmnd, id, 3));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+        public void UTCID_DeleteCustomer_01()
+        {
+            string id = "KH02";
+            string hoten = "Nguyen Khanh R";
+            string diachi = "45/8A Pham Van Dong";
+            string sdt = "0986647512";
+            string cmnd = "025614992257";
+
+            Assert.True(FKhachHang.CheckDeleteData(id));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+        public void UTCID_DeleteCustomer_02()
+        {
+            string id = "KH03";
+            string hoten = "Nguyen Khanh R";
+            string diachi = "45/8A Pham Van Dong";
+            string sdt = "0986647512";
+            string cmnd = "025614992257";
+
+            Assert.False(FKhachHang.CheckDeleteData(id));
+        }
+
 
         //đúng định dạng, không trùng tồn tại
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_ImportGood_01()
         {
             string id = "GD011";
@@ -320,6 +501,7 @@ namespace NUnitTesting
 
         //trùng ID đã tồn tại
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_ImportGood_02()
         {
             string id = "GD001";
@@ -333,6 +515,7 @@ namespace NUnitTesting
 
         //sai tất cả định dạng
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_ImportGood_03()
         {
             string id = "7rt9";
@@ -346,6 +529,7 @@ namespace NUnitTesting
 
         //Để trống
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void UTCID_ImportGood_04()
         {
             string id = "";
@@ -355,6 +539,146 @@ namespace NUnitTesting
             string xuatxu = "";
 
             Assert.False(FKhoHang.CheckData(id, tensp, gia, xuatxu, soluong));
+        }
+
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+
+        public void UTCID_AddToCart_01()
+        {
+            string id = "";
+            string soluong = "30";
+            Assert.False(FBanHang.CheckAddCart(id, soluong));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+
+        public void UTCID_AddToCart_02()
+        {
+            string id = "GD002";
+            string soluong = "30";
+            Assert.False(FBanHang.CheckAddCart(id, soluong));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+
+        public void UTCID_AddToCart_03()
+        {
+            string id = "GD001";
+            string soluong = "10";
+            Assert.True(FBanHang.CheckAddCart(id, soluong));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+
+        public void UTCID_AddToCart_04()
+        {
+            string id = "GD001";
+            string soluong = "9300";
+            Assert.False(FBanHang.CheckAddCart(id, soluong));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+
+        public void UTCID_SellingGood_01()
+        {
+            string id = "GD001";
+            string soluong = "20";
+            FBanHang.CheckAddCart(id, soluong);
+
+            string id_kh = "KH02";
+            string tien_nhan = "3500000";
+            DateTime date = DateTime.Now;
+
+            Assert.True(FBanHang.CheckTinhTien(id_kh, tien_nhan,date));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+
+        public void UTCID_SellingGood_02()
+        {
+            string id = "GD001";
+            string soluong = "20";
+
+            string id_kh = "KH02";
+            string tien_nhan = "350000đ";
+            DateTime date=DateTime.Now.Date.AddDays(-1);
+
+            FBanHang.CheckAddCart(id, soluong);
+            Assert.False(FBanHang.CheckTinhTien(id_kh, tien_nhan, date));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+        public void UTCID_SellingGood_03()
+        {
+            string id = "0";
+            string soluong = "0";
+
+
+            string id_kh = "KH02";
+            string tien_nhan = "350000đ";
+            DateTime date = DateTime.Now.Date;
+
+            FBanHang.CheckAddCart(id, soluong);
+
+            Assert.False(FBanHang.CheckTinhTien(id_kh, tien_nhan, date));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+        public void UTCID_SellingGood_04()
+        {
+            string id = "GD001";
+            string soluong = "20";
+
+
+            string id_kh = "KH02";
+            string tien_nhan = "150000đ";
+            DateTime date = DateTime.Now.Date;
+
+            FBanHang.CheckAddCart(id, soluong);
+
+            Assert.False(FBanHang.CheckTinhTien(id_kh, tien_nhan, date));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+        public void UTCID_SellingGood_05_1()
+        {
+            string id = "GD001";
+            string soluong = "20";
+
+            string id_kh = "";
+            string tien_nhan = "350000đ";
+            DateTime date = DateTime.Now.Date;
+
+            FBanHang.CheckAddCart(id, soluong);
+
+            Assert.False(FBanHang.CheckTinhTien(id_kh, tien_nhan, date));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+        public void UTCID_SellingGood_05_2()
+        {
+            string id = "GD001";
+            string soluong = "20";
+
+
+            string id_kh = "KH03";
+            string tien_nhan = "350000đ";
+            DateTime date = DateTime.Now.Date;
+
+            FBanHang.CheckAddCart(id, soluong);
+
+            Assert.False(FBanHang.CheckTinhTien(id_kh, tien_nhan, date));
         }
     }
 }

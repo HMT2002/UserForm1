@@ -3,6 +3,7 @@ using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using System.Text.RegularExpressions;
 
 
 namespace UserForm1.Forms
@@ -110,9 +111,11 @@ namespace UserForm1.Forms
             return s;
         }
 
-        private int TinhTienThua()
+        private int TinhTienThua(string tiennhan)
         {
-            string TienNhan = textBoxTienNhan.Text.Remove(textBoxTienNhan.Text.IndexOf("đ"));
+            try
+            {
+            string TienNhan = tiennhan.Remove(textBoxTienNhan.Text.IndexOf("đ"));
             TienNhan = TienNhan.Replace(",", "");
             int a = int.Parse(TienNhan);
 
@@ -121,6 +124,12 @@ namespace UserForm1.Forms
             int b = int.Parse(TriGia);
 
             return a - b;
+            }
+            catch
+            {
+            }
+                return 0;
+
         }
 
         bool MASP_exists(string masp)
@@ -155,7 +164,7 @@ namespace UserForm1.Forms
             ErrorTable.Visible = false;
         }
 
-        public bool CheckAddCart()
+        public bool CheckAddCart(string ma_sp="",string so_luong="")
         {
             Clear_Error();                           
 
@@ -163,9 +172,27 @@ namespace UserForm1.Forms
 
             #region check loi
 
+            SqlConnection con = new SqlConnection(@"Data Source=.\mssqlserver01;Initial Catalog=Grocery_Management;Integrated Security=True");
+
+            using (SqlCommand command = new SqlCommand())
+            {
+                command.Connection = con;
+                con.Open();
+                command.CommandText = @"select * from SANPHAM where MASP ='" + ma_sp + "'";
+                if (command.ExecuteReader().Read())
+                {
+                    //error_list.Add("Mã sản phẩm đã tồn tại!");
+                }
+                else
+                {
+                    flag = false;
+
+                }
+                con.Close();
+            }
 
             // Check sl sản phẩm còn trong kho                                
-            if (Subtract_SL() == false)
+            if (Subtract_SL(ma_sp, so_luong) == false)
             {
                 panel3.BackColor = Color.FromArgb(254, 184, 177);
                 txtBSL.BackColor = Color.FromArgb(254, 184, 177);
@@ -174,7 +201,7 @@ namespace UserForm1.Forms
 
             }
             //Neu MASP ko ton tai
-            if (cbbMaSP.FindString(cbbMaSP.Text) == -1 || string.IsNullOrEmpty(cbbMaSP.Text))
+            if (cbbMaSP.FindString(ma_sp) == -1 || string.IsNullOrEmpty(ma_sp))
             {
                 cbbMaSP.BackColor = Color.FromArgb(254, 184, 177);
                 ErrorTable.Rows.Add("Mã sản phẩm không hợp lệ");
@@ -194,7 +221,7 @@ namespace UserForm1.Forms
 
         public void btnAdd_Click(object sender, EventArgs e)
         {
-            if (CheckAddCart() == false)
+            if (CheckAddCart(cbbMaSP.Text,txtBSL.Text) == false)
             {
                 return;
             }
@@ -375,7 +402,7 @@ namespace UserForm1.Forms
             con.Close();
         }
 
-        bool Subtract_SL()
+        bool Subtract_SL(string ma_sp = "", string so_luong="")
         {
             try
             {
@@ -383,7 +410,7 @@ namespace UserForm1.Forms
                 con.Open();
 
                 // Check sl sản phẩm còn trong kho
-                string query = "UPDATE SANPHAM SET SOLUONG = SOLUONG - " + txtBSL.Text + " where MASP = '" + cbbMaSP.Text + "'";
+                string query = "UPDATE SANPHAM SET SOLUONG = SOLUONG - " + so_luong + " where MASP = '" + ma_sp + "'";
                 SqlCommand command = new SqlCommand(query, con);
                 command.ExecuteNonQuery();
                 con.Close();
@@ -407,52 +434,83 @@ namespace UserForm1.Forms
             con.Close();
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        public bool CheckTinhTien(string ma_kh = "", string tien_nhan = "", DateTime? date =null)
         {
             bool flag = true;
+
+            if (!date.HasValue)
+            {
+                date = datetimeNHD.Value;
+
+            }
+            else
+            {
+                date = date.Value;
+            }
+
+            if (date.Value.Date.CompareTo(DateTime.Now.Date)!=0)
+            {
+                flag = false;
+                ErrorTable.Rows.Add("ngày thanh toán");
+
+            }
+
+            //list bán hàng rỗng 
+            if (SPTable.RowCount == 0)
+            {
+                ErrorTable.Rows.Add("Vui lòng thêm sản phẩm để thanh toán");
+                flag = false;
+            }
+
+            if (!string.IsNullOrEmpty(ma_kh))
+            {
+                if (check_MAKH(ma_kh) == false)
+                {
+                    flag = false;
+                    txtbMAKH.BackColor = Color.FromArgb(254, 184, 177);
+                    panel4.BackColor = Color.FromArgb(254, 184, 177);
+                    ErrorTable.Rows.Add("Mã khách hàng không hợp lệ");
+                }
+            }
+
+            if (string.IsNullOrEmpty(tien_nhan))
+            {
+                textBoxTienNhan.BackColor = Color.FromArgb(254, 184, 177);
+                ErrorTable.Rows.Add("Tiền nhận không hợp lệ");
+                flag = false;
+            }
+            else if (TinhTienThua(tien_nhan) < 0)
+            {
+
+                ErrorTable.Rows.Add("*Tiền nhận không được nhỏ hơn trị giá hóa đơn");
+                textBoxTienNhan.BackColor = Color.FromArgb(254, 184, 177);
+                flag = false;
+            }
+
+
+            if (flag == false)
+            {
+                Show_Error();
+            }
+            return flag;
+
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
 
 
             Clear_Error();
             if (MessageBox.Show("Bạn có chắc muốn tính tiền và in hóa đơn?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {                                   
-                    //list bán hàng rỗng 
-                if(SPTable.RowCount == 0)
-                {
-                    ErrorTable.Rows.Add("Vui lòng thêm sản phẩm để thanh toán");
-                    flag = false;
-                }
+            {
 
-                if(!string.IsNullOrEmpty(txtbMAKH.Text))
+                if (CheckTinhTien(txtbMAKH.Text, textBoxTienNhan.Text,datetimeNHD.Value) == false)
                 {
-                    if(check_MAKH(txtbMAKH.Text)==false)
-                    {
-                        flag = false;
-                        txtbMAKH.BackColor = Color.FromArgb(254, 184, 177);
-                        panel4.BackColor = Color.FromArgb(254, 184, 177);
-                        ErrorTable.Rows.Add("Mã khách hàng không hợp lệ");
-                    }
-                }
-
-                if (string.IsNullOrEmpty(textBoxTienNhan.Text))
-                {
-                    textBoxTienNhan.BackColor = Color.FromArgb(254, 184, 177);
-                    ErrorTable.Rows.Add("Tiền nhận không hợp lệ");
-                    flag = false;
-                }
-                else if (TinhTienThua() < 0)
-                {
-
-                    ErrorTable.Rows.Add("*Tiền nhận không được nhỏ hơn trị giá hóa đơn");
-                    textBoxTienNhan.BackColor = Color.FromArgb(254, 184, 177);                    
-                    flag = false;
-                }
-
-
-                if (flag == false)
-                {
-                    Show_Error();
                     return;
                 }
+
+
+
                 InsertHoaDon();
                 DataTable dt;
                 dt = (DataTable)SPTable.DataSource;
@@ -507,7 +565,7 @@ namespace UserForm1.Forms
                 Clear_Error();
                 textBoxTienNhan_Leave(sender, e);
                 //Check neu tien nhan < tong tien
-                if (TinhTienThua() < 0)
+                if (TinhTienThua(textBoxTienNhan.Text) < 0)
                 {
                     
                     ErrorTable.Rows.Add("*Tiền nhận không được nhỏ hơn trị giá hóa đơn");
@@ -515,7 +573,7 @@ namespace UserForm1.Forms
                     Show_Error();
                     return;
                 }
-                textBoxTienTraLai.Text = TinhTienThua().ToString("###,##0") + "đ";
+                textBoxTienTraLai.Text = TinhTienThua(textBoxTienNhan.Text).ToString("###,##0") + "đ";
             }
         }
 

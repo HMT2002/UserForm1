@@ -250,12 +250,52 @@ namespace UserForm1.Forms
         #endregion
 
 
-        public bool CheckUpdate(string DuLieuMoi)
+        public bool CheckDeleteData(string user)
+        {
+
+            bool flag = false;
+            using (SqlCommand command = new SqlCommand())
+            {
+                command.Connection = conn;
+                conn.Open();
+                command.CommandText = @"select * from KHACHHANG where MAKH ='" + user + "'";
+                if (command.ExecuteReader().Read())
+                {
+                    flag = true;
+                }
+                conn.Close();
+            }
+
+            return flag;
+
+        }
+
+        public bool CheckUpdate(string DuLieuMoi="",string ma_kh="",int selected_index=-1)
         {
             bool flag = true;
 
             int check = 0;
-            if (MAKH_SUA.Text == "KHXX" && cbb_sua.SelectedIndex == 0)
+
+
+            using (SqlCommand command = new SqlCommand())
+            {
+                command.Connection = conn;
+                conn.Open();
+                command.CommandText = @"select * from KHACHHANG where MAKH ='" + ma_kh + "'";
+                if (command.ExecuteReader().Read())
+                {
+                    //error_list.Add("Mã khách hàng đã tồn tại!");
+                }
+                else
+                {
+                    flag = false;
+
+                }
+                conn.Close();
+            }
+
+
+            if (ma_kh == "KHXX" && selected_index == -1)
             {
                 error_list.Add("Vui lòng chọn thông tin cần sửa!");
                 check = 1;
@@ -295,7 +335,7 @@ namespace UserForm1.Forms
         private void buttonUpdate_Click(object sender, EventArgs e)
         {
 
-            if (CheckUpdate(DuLieuMoi.Text) == false)
+            if (CheckUpdate(DuLieuMoi.Text, MAKH_SUA.Text,cbb_sua.SelectedIndex) == false)
             {
                 return;
             }
@@ -602,6 +642,13 @@ namespace UserForm1.Forms
                 if (choice == DialogResult.Yes)
                 {
                     
+                    string ma_kh= KHTable[1, KHTable.CurrentCell.RowIndex].Value.ToString();
+
+                    if (CheckDeleteData(ma_kh) == false)
+                    {
+                        return;
+                    }
+
                     SqlCommand command = new SqlCommand();
 
                     command.Connection = conn;
