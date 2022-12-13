@@ -249,10 +249,57 @@ namespace UserForm1.Forms
         }
         #endregion
 
+
+        public bool CheckUpdate(string DuLieuMoi)
+        {
+            bool flag = true;
+
+            int check = 0;
+            if (MAKH_SUA.Text == "KHXX" && cbb_sua.SelectedIndex == 0)
+            {
+                error_list.Add("Vui lòng chọn thông tin cần sửa!");
+                check = 1;
+                MAKH_SUA.Text = "KHXX";
+                cbb_sua.Text = "";
+                DuLieuMoi = "VD: 0355175321";
+                flag = false;
+
+            }
+            if (DuLieuMoi == "VD: 0355175321")
+            {
+                error_list.Add("Vui lòng nhập dữ liệu mới!");
+                check = 1;
+
+                cbb_sua.Text = "";
+                DuLieuMoi = "VD: 0355175321";
+                flag = false;
+            }
+            if (DuLieuMoi == "")
+            {
+                error_list.Add("Vui lòng nhập dữ liệu mới!");
+                check = 1;
+
+                cbb_sua.Text = "";
+                DuLieuMoi = "VD: 0355175321";
+                flag = false;
+            }
+            if (check == 1)
+                Error_Handler();
+
+            return flag;
+        }
+
+
         #region buttons 
         //UPDATE
         private void buttonUpdate_Click(object sender, EventArgs e)
         {
+
+            if (CheckUpdate(DuLieuMoi.Text) == false)
+            {
+                return;
+            }
+
             conn.Open();
             SqlCommand command = new SqlCommand();
             command.Connection = conn;
@@ -268,9 +315,9 @@ namespace UserForm1.Forms
                     flag = true;
                     if (cbb_sua.Text == "Họ tên")
                     {
-                        if (DuLieuMoi.Text.Count() > 50)
+                        if (DuLieuMoi.Text.Count() > 50|| DuLieuMoi.Text.CompareTo(string.Empty)==0)
                         {
-                            error_list.Add("Họ tên chỉ có tối đa 50 ký tự!");
+                            error_list.Add("Họ tên chỉ có tối đa 50 ký tự và không được để trống! ");
                             check = 1;
                         }
                         else
@@ -298,15 +345,24 @@ namespace UserForm1.Forms
                     }
                     else if (cbb_sua.Text == "Địa chỉ")
                     {
+                        if (DuLieuMoi.Text.Count() != 12)
+                        {
+                            error_list.Add("CMND cần có 12 ký tự!");
+                            check = 1;
+                        }
+                        else
+                        {
                         dr[2] = DuLieuMoi.Text;
                         query = "Update KHACHHANG SET DIACHI = '" + DuLieuMoi.Text + "' Where MAKH = '" + MAKH_SUA.Text + "'";
                         command.CommandText = query;
                         command.ExecuteNonQuery();
+                        }
+
                     }
                    
                     else if (cbb_sua.Text == "CMND")
                     {
-                        if (CMND.Text.Count() != 12)
+                        if (DuLieuMoi.Text.Count() != 12)
                         {
                             error_list.Add("CMND cần có 12 ký tự!");
                             check = 1;

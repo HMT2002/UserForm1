@@ -129,8 +129,16 @@ namespace UserForm1.Forms
 
         void Show_Error()
         {
-            ErrorTable.CurrentCell.Selected = false;
+            try
+            {
+            //ErrorTable.CurrentCell.Selected = false;
             ErrorTable.Visible = true;
+            }
+            catch
+            {
+
+            }
+
             
         }
         
@@ -141,37 +149,78 @@ namespace UserForm1.Forms
             ErrorTable.Visible = false;
         }
 
-        public void btnAdd_Click(object sender, EventArgs e)
+        public bool CheckAddCart()
         {
             Clear_Error();                           
+
             bool flag = true;
-#region check loi
-                                    
+
+            #region check loi
+
 
             // Check sl sản phẩm còn trong kho                                
             if (Subtract_SL() == false)
             {
                 panel3.BackColor = Color.FromArgb(254, 184, 177);
                 txtBSL.BackColor = Color.FromArgb(254, 184, 177);
-                ErrorTable.Rows.Add("Số lượng sản phẩm không đủ");               
+                ErrorTable.Rows.Add("Số lượng sản phẩm không đủ");
                 flag = false;
-                
+
             }
             //Neu MASP ko ton tai
             if (cbbMaSP.FindString(cbbMaSP.Text) == -1 || string.IsNullOrEmpty(cbbMaSP.Text))
             {
                 cbbMaSP.BackColor = Color.FromArgb(254, 184, 177);
-                ErrorTable.Rows.Add("Mã sản phẩm không hợp lệ");                                
+                ErrorTable.Rows.Add("Mã sản phẩm không hợp lệ");
                 flag = false;
-                
+
             }
 
             #endregion
-            if (flag == false)  
+
+            if (flag == false)
             {
                 Show_Error();
+            }
+
+            return flag;
+        }
+
+        public void btnAdd_Click(object sender, EventArgs e)
+        {
+            if (CheckAddCart() == false)
+            {
                 return;
             }
+
+//            bool flag = true;
+#region check loi
+                                    
+
+//            // Check sl sản phẩm còn trong kho                                
+//            if (Subtract_SL() == false)
+//            {
+//                panel3.BackColor = Color.FromArgb(254, 184, 177);
+//                txtBSL.BackColor = Color.FromArgb(254, 184, 177);
+//                ErrorTable.Rows.Add("Số lượng sản phẩm không đủ");               
+//                flag = false;
+                
+//            }
+//            //Neu MASP ko ton tai
+//            if (cbbMaSP.FindString(cbbMaSP.Text) == -1 || string.IsNullOrEmpty(cbbMaSP.Text))
+//            {
+//                cbbMaSP.BackColor = Color.FromArgb(254, 184, 177);
+//                ErrorTable.Rows.Add("Mã sản phẩm không hợp lệ");                                
+//                flag = false;
+                
+//            }
+
+            #endregion
+//            if (flag == false)  
+//            {
+//                Show_Error();
+//                return;
+//            }
 
             SqlConnection con = new SqlConnection(@"Data Source=.\mssqlserver01;Initial Catalog=Grocery_Management;Integrated Security=True");
             con.Open();
@@ -232,6 +281,8 @@ namespace UserForm1.Forms
 
         private void cbbMaSP_SelectedIndexChanged(object sender, EventArgs e)
         {
+            try
+            {
             panel3.BackColor = Color.White;
             txtBSL.BackColor = Color.White;
             SqlConnection con = new SqlConnection(@"Data Source=.\mssqlserver01;Initial Catalog=Grocery_Management;Integrated Security=True");
@@ -246,6 +297,12 @@ namespace UserForm1.Forms
 
             txtBTenSP.Text = dr[1].ToString();
             con.Close();
+            }
+            catch
+            {
+
+            }
+
         }
 
         void InsertCTHD(DataRow dr)
@@ -347,6 +404,8 @@ namespace UserForm1.Forms
         private void btnSave_Click(object sender, EventArgs e)
         {
             bool flag = true;
+
+
             Clear_Error();
             if (MessageBox.Show("Bạn có chắc muốn tính tiền và in hóa đơn?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {                                   

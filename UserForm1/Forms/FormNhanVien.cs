@@ -13,6 +13,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using System.Net;
 using System.Linq.Expressions;
+using System.Deployment.Application;
 
 namespace UserForm1.Forms
 {
@@ -323,9 +324,123 @@ namespace UserForm1.Forms
             //filterinfo.Text = "VD: 13000";
         }
 
+        public bool CheckUpdateData(string info)
+        {
+            bool flag = true;
+
+            if (comboUser.Text.CompareTo(string.Empty)==0)
+            {
+                flag = false;
+                error_list.Add("Vui lòng chọn nhân viên cần cập nhật!");
+            }
+
+            if (comboColumn.SelectedIndex == -1)
+            {
+                flag = false;
+                error_list.Add("Vui lòng chọn thông tin cần cập nhật!");
+            }
+
+            if (comboColumn.SelectedIndex == 0 && info.Count() > 15)
+            {
+                flag = false;
+                error_list.Add("Mật khẩu chỉ có tối đa 15 ký tự!");
+                newinfo.BackColor = Color.FromArgb(254, 184, 177);
+            }
+
+            if (comboColumn.SelectedIndex == 0 && info == "VD: Nguyễn A")
+            {
+                flag = false;
+                error_list.Add("Vui lòng nhập giá trị cho mật khẩu!");
+                newinfo.BackColor = Color.FromArgb(254, 184, 177);
+            }
+
+            if (comboColumn.SelectedIndex == 1 && info.Count() > 50)
+            {
+                flag = false;
+                error_list.Add("Họ tên chỉ có tối đa 50 ký tự!");
+                newinfo.BackColor = Color.FromArgb(254, 184, 177);
+            }
+
+            if (comboColumn.SelectedIndex == 1 && info == "VD: Nguyễn A")
+            {
+                flag = false;
+                error_list.Add("Vui lòng nhập họ và tên!");
+                newinfo.BackColor = Color.FromArgb(254, 184, 177);
+            }
+
+            if (comboColumn.SelectedIndex == 2 && info.Count() != 12)
+            {
+                flag = false;
+                error_list.Add("CMND cần có 12 ký tự!");
+                newinfo.BackColor = Color.FromArgb(254, 184, 177);
+            }
+
+            if (comboColumn.SelectedIndex == 3 && info == "VD: Nguyễn A")
+            {
+                flag = false;
+                error_list.Add("Vui lòng nhập địa chỉ!");
+                newinfo.BackColor = Color.FromArgb(254, 184, 177);
+            }
+
+            if (comboColumn.SelectedIndex == 3 && info.Count() == 50)
+            {
+                flag = false;
+                error_list.Add("Địa chỉ chí có tối đa 50 ký tự!");
+                newinfo.BackColor = Color.FromArgb(254, 184, 177);
+            }
+
+            if (comboColumn.SelectedIndex == 4 && info == "VD: Nguyễn A")
+            {
+                flag = false;
+                error_list.Add("Số điện thoại cần có 10 ký tự!");
+                newinfo.BackColor = Color.FromArgb(254, 184, 177);
+            }
+
+            if (comboColumn.SelectedIndex == 5 && info.Count() > 50)
+            {
+                flag = false;
+                error_list.Add("Email chỉ có tối đa 50 ký tự!");
+                newinfo.BackColor = Color.FromArgb(254, 184, 177);
+            }
+
+            if (comboColumn.SelectedIndex == 5 && info == "VD: Nguyễn A")
+            {
+                flag = false;
+                error_list.Add("Vui lòng nhập email!");
+                newinfo.BackColor = Color.FromArgb(254, 184, 177);
+            }
+
+            if (comboColumn.SelectedIndex == 5 && info == "")
+            {
+                flag = false;
+                error_list.Add("Vui lòng nhập email!");
+                newinfo.BackColor = Color.FromArgb(254, 184, 177);
+            }
+
+            if (comboColumn.SelectedIndex == 6 && info == "VD: Nguyễn A")
+            {
+                flag = false;
+                error_list.Add("Vui lòng nhập giá trị cho lương!");
+                newinfo.BackColor = Color.FromArgb(254, 184, 177);
+            }
+
+
+
+            if (flag == false)
+                Error_Handler();
+
+            return flag;
+        }
+
         //Update
         private void Update_Click(object sender, EventArgs e)
         {
+            if (CheckUpdateData(newinfo.Text)==false)
+            {
+                return;
+            }
+
+
             SqlCommand command = new SqlCommand();
             command.Connection = conn;
             conn.Open();
@@ -384,124 +499,7 @@ namespace UserForm1.Forms
             }
             catch (Exception er)
             {
-                command.CommandText = "select dbo.ch_exist(@name)";
-                command.CommandType = CommandType.Text;
-                command.Parameters.Add("@name", SqlDbType.Char, 5).Value = Username.Text;
-                bool flag = false;
 
-                if (comboUser.SelectedIndex == -1)
-                {
-                    flag = true;
-                    error_list.Add("Vui lòng chọn nhân viên cần cập nhật!");
-                }
-
-                if (comboColumn.SelectedIndex == -1)
-                {
-                    flag = true;
-                    error_list.Add("Vui lòng chọn thông tin cần cập nhật!");
-                }
-
-                if (comboColumn.SelectedIndex == 0 && newinfo.Text.Count() > 15)
-                {
-                    flag = true;
-                    error_list.Add("Mật khẩu chỉ có tối đa 15 ký tự!");
-                    newinfo.BackColor = Color.FromArgb(254, 184, 177);
-                }
-
-                if (comboColumn.SelectedIndex == 0 && newinfo.Text == "VD: Nguyễn A")
-                {
-                    flag = true;
-                    error_list.Add("Vui lòng nhập giá trị cho mật khẩu!");
-                    newinfo.BackColor = Color.FromArgb(254, 184, 177);
-                }
-
-                if (comboColumn.SelectedIndex == 1 && newinfo.Text.Count() > 50)
-                {
-                    flag = true;
-                    error_list.Add("Họ tên chỉ có tối đa 50 ký tự!");
-                    newinfo.BackColor = Color.FromArgb(254, 184, 177);
-                }
-
-                if (comboColumn.SelectedIndex == 1 && newinfo.Text == "VD: Nguyễn A")
-                {
-                    flag = true;
-                    error_list.Add("Vui lòng nhập họ và tên!");
-                    newinfo.BackColor = Color.FromArgb(254, 184, 177);
-                }
-
-                if (comboColumn.SelectedIndex == 2 && newinfo.Text.Count() != 12)
-                {
-                    flag = true;
-                    error_list.Add("CMND cần có 12 ký tự!");
-                    newinfo.BackColor = Color.FromArgb(254, 184, 177);
-                }
-
-                if (comboColumn.SelectedIndex == 3 && newinfo.Text == "VD: Nguyễn A")
-                {
-                    flag = true;
-                    error_list.Add("Vui lòng nhập địa chỉ!");
-                    newinfo.BackColor = Color.FromArgb(254, 184, 177);
-                }
-
-                if (comboColumn.SelectedIndex == 3 && newinfo.Text.Count() == 50)
-                {
-                    flag = true;
-                    error_list.Add("Địa chỉ chí có tối đa 50 ký tự!");
-                    newinfo.BackColor = Color.FromArgb(254, 184, 177);
-                }
-
-                if (comboColumn.SelectedIndex == 4 && newinfo.Text == "VD: Nguyễn A")
-                {
-                    flag = true;
-                    error_list.Add("Số điện thoại cần có 10 ký tự!");
-                    newinfo.BackColor = Color.FromArgb(254, 184, 177);
-                }
-
-                if (comboColumn.SelectedIndex == 5 && newinfo.Text.Count() > 50)
-                {
-                    flag = true;
-                    error_list.Add("Email chỉ có tối đa 50 ký tự!");
-                    newinfo.BackColor = Color.FromArgb(254, 184, 177);
-                }
-
-                if (comboColumn.SelectedIndex == 5 && newinfo.Text == "VD: Nguyễn A")
-                {
-                    flag = true;
-                    error_list.Add("Vui lòng nhập email!");
-                    newinfo.BackColor = Color.FromArgb(254, 184, 177);
-                }
-
-                if (comboColumn.SelectedIndex == 6 && newinfo.Text == "VD: Nguyễn A")
-                {
-                    flag = true;
-                    error_list.Add("Vui lòng nhập giá trị cho lương!");
-                    newinfo.BackColor = Color.FromArgb(254, 184, 177);
-                }
-
-                long parsedValue2;
-                if (long.TryParse(newinfo.Text, out parsedValue2) == false)
-                {
-                    flag = true;
-                    error_list.Add("Sai kiểu dữ liệu!");
-                    newinfo.BackColor = Color.FromArgb(254, 184, 177);
-                }
-
-                if (flag == false)
-                {
-                    error_list.Add(er.Message);
-                    flag = true;
-                }
-
-                if (flag == true)
-                    Error_Handler();
-
-                conn.Close();
-
-                reset_tbs();
-
-                newinfo.ForeColor = Color.FromArgb(180, 180, 180);
-                newinfo.Text = "VD: Nguyễn A";
-                NVTable.DataSource = loaddata().Tables[0];
             }
             conn.Close();
         }
