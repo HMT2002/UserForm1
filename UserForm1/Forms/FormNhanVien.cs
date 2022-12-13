@@ -14,6 +14,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using System.Net;
 using System.Linq.Expressions;
 using System.Deployment.Application;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace UserForm1.Forms
 {
@@ -324,100 +325,108 @@ namespace UserForm1.Forms
             //filterinfo.Text = "VD: 13000";
         }
 
-        public bool CheckUpdateData(string info)
+        public bool CheckUpdateData(string info="",string seleted_user= "",int selected_index=-1)
         {
             bool flag = true;
 
-            if (comboUser.Text.CompareTo(string.Empty)==0)
+
+            if (info.Count() <= 0 || info == "VD: Nguyễn A")
+            {
+                flag = false;
+                error_list.Add("Vui lòng không bỏ trống thông tin");
+                newinfo.BackColor = Color.FromArgb(254, 184, 177);
+            }
+
+            if (seleted_user.CompareTo(string.Empty)==0)
             {
                 flag = false;
                 error_list.Add("Vui lòng chọn nhân viên cần cập nhật!");
             }
 
-            if (comboColumn.SelectedIndex == -1)
+            if (selected_index == -1)
             {
                 flag = false;
                 error_list.Add("Vui lòng chọn thông tin cần cập nhật!");
             }
 
-            if (comboColumn.SelectedIndex == 0 && info.Count() > 15)
+            if (selected_index == 0 && info.Count() > 15)
             {
                 flag = false;
                 error_list.Add("Mật khẩu chỉ có tối đa 15 ký tự!");
                 newinfo.BackColor = Color.FromArgb(254, 184, 177);
             }
 
-            if (comboColumn.SelectedIndex == 0 && info == "VD: Nguyễn A")
+            if (selected_index == 0 && info == "VD: Nguyễn A")
             {
                 flag = false;
-                error_list.Add("Vui lòng nhập giá trị cho mật khẩu!");
+                error_list.Add("Vui lòng nhập giá trị cho mật khẩu");
                 newinfo.BackColor = Color.FromArgb(254, 184, 177);
             }
 
-            if (comboColumn.SelectedIndex == 1 && info.Count() > 50)
+            if (selected_index == 1 && info.Count() > 50)
             {
                 flag = false;
                 error_list.Add("Họ tên chỉ có tối đa 50 ký tự!");
                 newinfo.BackColor = Color.FromArgb(254, 184, 177);
             }
 
-            if (comboColumn.SelectedIndex == 1 && info == "VD: Nguyễn A")
+            if (selected_index == 1 && info == "VD: Nguyễn A")
             {
                 flag = false;
                 error_list.Add("Vui lòng nhập họ và tên!");
                 newinfo.BackColor = Color.FromArgb(254, 184, 177);
             }
 
-            if (comboColumn.SelectedIndex == 2 && info.Count() != 12)
+            if (selected_index == 2 && info.Count() != 12)
             {
                 flag = false;
                 error_list.Add("CMND cần có 12 ký tự!");
                 newinfo.BackColor = Color.FromArgb(254, 184, 177);
             }
 
-            if (comboColumn.SelectedIndex == 3 && info == "VD: Nguyễn A")
+            if (selected_index == 3 && info == "VD: Nguyễn A")
             {
                 flag = false;
                 error_list.Add("Vui lòng nhập địa chỉ!");
                 newinfo.BackColor = Color.FromArgb(254, 184, 177);
             }
 
-            if (comboColumn.SelectedIndex == 3 && info.Count() == 50)
+            if (selected_index == 3 && info.Count() == 50)
             {
                 flag = false;
                 error_list.Add("Địa chỉ chí có tối đa 50 ký tự!");
                 newinfo.BackColor = Color.FromArgb(254, 184, 177);
             }
 
-            if (comboColumn.SelectedIndex == 4 && info == "VD: Nguyễn A")
+            if (selected_index == 4 && info == "VD: Nguyễn A")
             {
                 flag = false;
                 error_list.Add("Số điện thoại cần có 10 ký tự!");
                 newinfo.BackColor = Color.FromArgb(254, 184, 177);
             }
 
-            if (comboColumn.SelectedIndex == 5 && info.Count() > 50)
+            if (selected_index == 5 && info.Count() > 50)
             {
                 flag = false;
                 error_list.Add("Email chỉ có tối đa 50 ký tự!");
                 newinfo.BackColor = Color.FromArgb(254, 184, 177);
             }
 
-            if (comboColumn.SelectedIndex == 5 && info == "VD: Nguyễn A")
+            if (selected_index == 5 && info == "VD: Nguyễn A")
             {
                 flag = false;
                 error_list.Add("Vui lòng nhập email!");
                 newinfo.BackColor = Color.FromArgb(254, 184, 177);
             }
 
-            if (comboColumn.SelectedIndex == 5 && info == "")
+            if (selected_index == 5 && info == "")
             {
                 flag = false;
                 error_list.Add("Vui lòng nhập email!");
                 newinfo.BackColor = Color.FromArgb(254, 184, 177);
             }
 
-            if (comboColumn.SelectedIndex == 6 && info == "VD: Nguyễn A")
+            if (selected_index == 6 && info == "VD: Nguyễn A")
             {
                 flag = false;
                 error_list.Add("Vui lòng nhập giá trị cho lương!");
@@ -435,7 +444,7 @@ namespace UserForm1.Forms
         //Update
         private void Update_Click(object sender, EventArgs e)
         {
-            if (CheckUpdateData(newinfo.Text)==false)
+            if (CheckUpdateData(newinfo.Text,comboUser.Text, comboColumn.SelectedIndex) ==false)
             {
                 return;
             }
@@ -504,6 +513,26 @@ namespace UserForm1.Forms
             conn.Close();
         }
 
+        public bool CheckDeleteData(string user)
+        {
+
+            bool flag = false;
+            using (SqlCommand command = new SqlCommand())
+            {
+                command.Connection = conn;
+                conn.Open();
+                command.CommandText = @"select * from NHANVIEN where Uname ='" + user + "'";
+                if (command.ExecuteReader().Read())
+                {
+                    flag = true;
+                }
+                conn.Close();
+            }
+
+            return flag;
+
+        }
+
         //Delete and Insert Image
         private void NVTable_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -516,11 +545,19 @@ namespace UserForm1.Forms
 
                 if (choice == DialogResult.Yes)
                 {
+                    string user_temp = NVTable[1, NVTable.CurrentCell.RowIndex].Value.ToString();
+
+                    if (CheckDeleteData(user_temp) == false)
+                    {
+                        return;
+                    }
+
                     SqlCommand command = new SqlCommand();
 
                     command.Connection = conn;
                     conn.Open();
-                    string user_temp = NVTable[1, NVTable.CurrentCell.RowIndex].Value.ToString();
+
+
 
                     try
                     {

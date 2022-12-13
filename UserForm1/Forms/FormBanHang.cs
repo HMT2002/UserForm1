@@ -15,7 +15,13 @@ namespace UserForm1.Forms
             InitializeComponent();
             this.temp = temp;
         }
-    
+
+        public FormBanHang()
+        {
+            InitializeComponent();
+
+        }
+
         DataTable dt = new DataTable();
         
 
