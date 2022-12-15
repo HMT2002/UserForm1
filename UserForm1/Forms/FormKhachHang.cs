@@ -634,7 +634,6 @@ namespace UserForm1.Forms
         {
             KHTable.DefaultCellStyle.SelectionBackColor = Color.SteelBlue;
             KHTable.DefaultCellStyle.SelectionForeColor = Color.White;
-            conn.Open();
             if (KHTable.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
             {
                 DialogResult choice = MessageBox.Show("Bạn có chắc muốn xóa khách hàng này?", "Thông báo!", MessageBoxButtons.YesNo);
@@ -652,7 +651,7 @@ namespace UserForm1.Forms
                     SqlCommand command = new SqlCommand();
 
                     command.Connection = conn;
-                    
+                    conn.Open();
                     try
                     {
                         command.CommandText = "delete from KHACHHANG where MAKH = @makh";

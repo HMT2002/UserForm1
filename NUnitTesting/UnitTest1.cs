@@ -639,7 +639,7 @@ namespace NUnitTesting
             string soluong = "20";
 
 
-            string id_kh = "KH02";
+            string id_kh = "KH09";
             string tien_nhan = "150000đ";
             DateTime date = DateTime.Now.Date;
 

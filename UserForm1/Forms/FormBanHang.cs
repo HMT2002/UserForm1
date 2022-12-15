@@ -462,7 +462,7 @@ namespace UserForm1.Forms
                 flag = false;
             }
 
-            if (!string.IsNullOrEmpty(ma_kh))
+            if (string.IsNullOrEmpty(ma_kh.Trim()))
             {
                 if (check_MAKH(ma_kh) == false)
                 {
