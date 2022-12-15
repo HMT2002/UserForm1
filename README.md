@@ -45,7 +45,12 @@ After finish, you can start the <b>New AutoIt v3 Script.exe</b> file to automati
 <br>
 <img src="GitInstructionMaterials\TestingDisplay.PNG" width="600" /></div>
 <br>
-
+<br>
+<img src="GitInstructionMaterials\LoginDiaplay.PNG" width="600" /></div>
+<br>
+Manager account: 1 ; Password: 1
+<br>
+Employee account: ST003; Password: 2
 </div>
 
 </body>
