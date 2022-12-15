@@ -53,7 +53,7 @@ namespace UserForm1.Forms
 
 
         //Connect to database
-        SqlConnection conn = new SqlConnection(@"Data Source=.\mssqlserver01;Initial Catalog=Grocery_Management;Integrated Security=True");
+        SqlConnection conn = new SqlConnection(Properties.Settings.Default.DatabaseConnection);
 
         //Load Table
         #region Load Table

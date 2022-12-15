@@ -108,7 +108,7 @@ namespace UserForm1
         private void buttonLogin_Click(object sender, EventArgs e)
         {
             
-            SqlConnection connection = new SqlConnection(@"Data Source=.\mssqlserver01;Initial Catalog=Grocery_Management;Integrated Security=True");
+            SqlConnection connection = new SqlConnection(Properties.Settings.Default.DatabaseConnection);
             SqlDataAdapter da = new SqlDataAdapter("select * from Phanquyen where tendangnhap = '" + textBoxUsername.Text + "' and matkhau = '" + textBoxPassword.Text + "'", connection);
             DataTable dt = new DataTable();
             da.Fill(dt);

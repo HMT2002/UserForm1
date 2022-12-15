@@ -18,7 +18,7 @@ namespace UserForm1.Forms
             InitializeComponent();
         }
 
-        SqlConnection conn = new SqlConnection(@"Data Source=.\mssqlserver01;Initial Catalog=Grocery_Management;Integrated Security=True");
+        SqlConnection conn = new SqlConnection(Properties.Settings.Default.DatabaseConnection);
         public string sohd;
 
         private void CTHD_Load(object sender, EventArgs e)

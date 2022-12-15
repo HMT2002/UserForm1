@@ -33,7 +33,7 @@ namespace UserForm1.Forms
 
         void GetSHD()
         {
-            SqlConnection con = new SqlConnection(@"Data Source=.\mssqlserver01;Initial Catalog=Grocery_Management;Integrated Security=True");
+            SqlConnection con = new SqlConnection(Properties.Settings.Default.DatabaseConnection);
             con.Open();
 
             string query = "Select count(SOHD) from HOADON";
@@ -172,7 +172,7 @@ namespace UserForm1.Forms
 
             #region check loi
 
-            SqlConnection con = new SqlConnection(@"Data Source=.\mssqlserver01;Initial Catalog=Grocery_Management;Integrated Security=True");
+            SqlConnection con = new SqlConnection(Properties.Settings.Default.DatabaseConnection);
 
             using (SqlCommand command = new SqlCommand())
             {
@@ -255,7 +255,7 @@ namespace UserForm1.Forms
 //                return;
 //            }
 
-            SqlConnection con = new SqlConnection(@"Data Source=.\mssqlserver01;Initial Catalog=Grocery_Management;Integrated Security=True");
+            SqlConnection con = new SqlConnection(Properties.Settings.Default.DatabaseConnection);
             con.Open();
 
             string query = "Select * from SANPHAM where MASP = '" + cbbMaSP.Text + "'";
@@ -318,7 +318,7 @@ namespace UserForm1.Forms
             {
             panel3.BackColor = Color.White;
             txtBSL.BackColor = Color.White;
-            SqlConnection con = new SqlConnection(@"Data Source=.\mssqlserver01;Initial Catalog=Grocery_Management;Integrated Security=True");
+            SqlConnection con = new SqlConnection(Properties.Settings.Default.DatabaseConnection);
             con.Open();
 
             string query = "Select * from SANPHAM where MASP = '" + cbbMaSP.Text + "'";
@@ -340,7 +340,7 @@ namespace UserForm1.Forms
 
         void InsertCTHD(DataRow dr)
         {
-            SqlConnection con = new SqlConnection(@"Data Source=.\mssqlserver01;Initial Catalog=Grocery_Management;Integrated Security=True");
+            SqlConnection con = new SqlConnection(Properties.Settings.Default.DatabaseConnection);
             con.Open();
             string query = "insert into CTHD values (@sohd,@masp,@sl)";
             SqlCommand command = new SqlCommand(query, con);
@@ -357,7 +357,7 @@ namespace UserForm1.Forms
         {
             bool temp = false;
 
-            SqlConnection con = new SqlConnection(@"Data Source=.\mssqlserver01;Initial Catalog=Grocery_Management;Integrated Security=True");
+            SqlConnection con = new SqlConnection(Properties.Settings.Default.DatabaseConnection);
             con.Open();
             string query = "SELECT MAKH FROM KHACHHANG";
             SqlCommand command = new SqlCommand(query, con);
@@ -381,7 +381,7 @@ namespace UserForm1.Forms
         {
             datetimeNHD.Value = DateTime.Now;
 
-            SqlConnection con = new SqlConnection(@"Data Source=.\mssqlserver01;Initial Catalog=Grocery_Management;Integrated Security=True");
+            SqlConnection con = new SqlConnection(Properties.Settings.Default.DatabaseConnection);
             con.Open();
             string query = "insert into HOADON values (@sohd,@nghd,@makh,@manv,@trigia)";
 
@@ -406,7 +406,7 @@ namespace UserForm1.Forms
         {
             try
             {
-                SqlConnection con = new SqlConnection(@"Data Source=.\mssqlserver01;Initial Catalog=Grocery_Management;Integrated Security=True");
+                SqlConnection con = new SqlConnection(Properties.Settings.Default.DatabaseConnection);
                 con.Open();
 
                 // Check sl sản phẩm còn trong kho
@@ -424,7 +424,7 @@ namespace UserForm1.Forms
 
         void Plus_SL(DataGridViewRow viewRow)
         {
-            SqlConnection con = new SqlConnection(@"Data Source=.\mssqlserver01;Initial Catalog=Grocery_Management;Integrated Security=True");
+            SqlConnection con = new SqlConnection(Properties.Settings.Default.DatabaseConnection);
             con.Open();
 
             // Check sl sản phẩm còn trong kho
