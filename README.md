@@ -39,7 +39,7 @@
 
 <br>
 <div>
-After finish, you can start the <b>New AutoIt v3 Script.exe</b> file to automation test project.
+After finish, you can start the <b>New AutoIt v3 Script.exe</b> file in <b>UserForm1</b> folder to automation test project.
 <br>
 <img src="GitInstructionMaterials\NewAutoItv3Script.PNG" width="600" /></div>
 <br>
